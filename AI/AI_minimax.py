@@ -9,7 +9,7 @@ class AI_minimax:
         self.player = player
 
     @classmethod
-    def minimax(cls, board, depth, maximizingPlayer, player, turn):
+    def minimax(cls, board, depth, maximizingPlayer, player, turn, alpha, beta):
         if depth == 0 or not Reversi.valid_moves(board, turn):
             game_over, white_total, black_total = Reversi.check_board(board, turn)
             if game_over:
@@ -30,10 +30,13 @@ class AI_minimax:
             for x, y in Reversi.valid_moves(board, turn):
                 tboard = board.copy()
                 Reversi.move(tboard, turn, x, y)
-                cmax, dlist = cls.minimax(tboard, depth - 1, False, player, -turn)
+                cmax, dlist = cls.minimax(tboard, depth - 1, False, player, -turn, alpha, beta)
                 if cmax > maxv:
                     maxv = cmax
                     xmax, ymax = x, y
+                alpha = max(alpha, cmax)
+                if beta <= alpha:
+                    break
             dlist.insert(0, (xmax, ymax))
             return maxv, dlist
 
@@ -42,16 +45,19 @@ class AI_minimax:
             for x, y in Reversi.valid_moves(board, turn):
                 tboard = board.copy()
                 Reversi.move(tboard, turn, x, y)
-                cmin, dlist = cls.minimax(tboard, depth - 1, True, player, -turn)
+                cmin, dlist = cls.minimax(tboard, depth - 1, True, player, -turn, alpha, beta)
                 if cmin < minv:
                     minv = cmin
                     xmin, ymin = x, y
+                beta = min(beta, cmin)
+                if beta <= alpha:
+                    break
             dlist.insert(0, (xmin, ymin))
             return minv, dlist
 
 
     def move(self, board):
-        x, y = self.minimax(board, 2, True, self.player, self.player)[1][0]
+        x, y = self.minimax(board, 3, True, self.player, self.player, -1000000, 1000000)[1][0]
         return x, y
 
 if __name__ == "__main__":
