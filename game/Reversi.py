@@ -86,18 +86,13 @@ class Reversi:
                     board[xpos][ypos] = turn
 
     @classmethod
-    def check_win(cls, board, turn):
+    def check_board(cls, board, turn):
+        game_over = True
         if cls.valid_moves(board, turn):
-            return False
-        else:
-            white_total = (board == 1).sum()
-            black_total = (board == -1).sum()
-            if white_total == black_total:
-                print("Draw: {} / {}".format(white_total, black_total))
-            elif white_total > black_total:
-                print("White wins: {} / {}".format(white_total, black_total))
-            elif white_total < black_total:
-                print("Black wins: {} / {}".format(black_total, white_total))
+            game_over = False
+        white_total = (board == 1).sum()
+        black_total = (board == -1).sum()
+        return game_over, white_total, black_total
 
 
 if __name__ == "__main__":

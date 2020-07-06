@@ -1,7 +1,8 @@
 import numpy as np
 import pygame
 from pygame import gfxdraw
-from Reversi import Reversi
+from game.Reversi import Reversi
+from AI.AI_random import AI_random
 
 pygame.init()
 pygame.font.init()
@@ -53,29 +54,61 @@ def redrawGameWindow(board, mboard, turn):
 if __name__ == "__main__":
     game = Reversi()
     game.update_mboard()
+
+    def play(x, y):
+        Reversi.move(game.board, game.turn, x, y)
+        game.turn *= -1
+        game.update_mboard()
+        game_over, white_total, black_total = Reversi.check_board(game.board, game.turn)
+        if game_over:
+            if white_total == black_total:
+                print("Draw: {} / {}".format(white_total, black_total))
+            elif white_total > black_total:
+                print("White wins: {} / {}".format(white_total, black_total))
+            elif white_total < black_total:
+                print("Black wins: {} / {}".format(black_total, white_total))
+            return False
+        else:
+            return True
+
+    player1 = "player"        # -1 "black"
+    player2 = AI_random(1)    # 1 "white"
+
     clock = pygame.time.Clock()
     run = True
 
     while run:
-        clock.tick(20)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+                break
+
+        if game.turn == -1:
+            if player1 == "player":
                 if pygame.mouse.get_pressed()[0]:
                     mx, my = pygame.mouse.get_pos()
                     mx = mx // (pix + linew)
                     my = my // (pix + linew)
                     if game.mboard[mx][my] == game.turn:
-                        game.move(game.board, game.turn, mx, my)
-                        game.turn *= -1
-                        game.update_mboard()
-                        if game.check_win(game.board, game.turn):
-                            run = False
-                            print(game.check_win(game.board, game.turn))
+                        run = play(mx, my)
+            else:
+                mx, my = player1.move(game.board)
+                run = play(mx, my)
 
+        elif game.turn == 1:
+            if player2 == "player":
+                if pygame.mouse.get_pressed()[0]:
+                    mx, my = pygame.mouse.get_pos()
+                    mx = mx // (pix + linew)
+                    my = my // (pix + linew)
+                    if game.mboard[mx][my] == game.turn:
+                        run = play(mx, my)
+            else:
+                mx, my = player2.move(game.board)
+                run = play(mx, my)
+
+        clock.tick(20)
         redrawGameWindow(game.board, game.mboard, game.turn)
 
-    input()
     pygame.quit()
