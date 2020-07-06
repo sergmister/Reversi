@@ -3,6 +3,7 @@ import pygame
 from pygame import gfxdraw
 from game.Reversi import Reversi
 from AI.AI_random import AI_random
+from AI.AI_minimax import AI_minimax
 
 pygame.init()
 pygame.font.init()
@@ -71,8 +72,8 @@ if __name__ == "__main__":
         else:
             return True
 
-    player1 = "player"        # -1 "black"
-    player2 = AI_random(1)    # 1 "white"
+    player1 = AI_random(-1)       # -1 "black"
+    player2 = AI_minimax(1)    # 1 "white"
 
     clock = pygame.time.Clock()
     run = True
