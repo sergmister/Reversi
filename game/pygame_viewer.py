@@ -72,8 +72,8 @@ if __name__ == "__main__":
         else:
             return True
 
-    player1 = AI_random(-1)       # -1 "black"
-    player2 = AI_minimax(1)    # 1 "white"
+    player1 = "player"     # -1 "black"
+    player2 = AI_minimax(1)   # 1 "white"
 
     clock = pygame.time.Clock()
     run = True

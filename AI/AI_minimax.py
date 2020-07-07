@@ -5,8 +5,9 @@ from game.Reversi import Reversi
 
 class AI_minimax:
 
-    def __init__(self, player):
+    def __init__(self, player, depth=3):
         self.player = player
+        self.depth = depth
 
     @classmethod
     def minimax(cls, board, depth, maximizingPlayer, player, turn, alpha, beta):
@@ -57,11 +58,10 @@ class AI_minimax:
 
 
     def move(self, board):
-        x, y = self.minimax(board, 3, True, self.player, self.player, -1000000, 1000000)[1][0]
+        x, y = self.minimax(board, self.depth, True, self.player, self.player, -1000000, 1000000)[1][0]
         return x, y
 
 if __name__ == "__main__":
     game = Reversi()
     player = AI_minimax(-1)
-    #print(AI_minimax.minimax(game.board, 4, True, -1, -1))
     print(player.move(game.board))
