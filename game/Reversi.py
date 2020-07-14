@@ -94,6 +94,16 @@ class Reversi:
         black_total = (board == -1).sum()
         return game_over, white_total, black_total
 
+    @classmethod
+    def value(cls, board, player):
+        white_total = (board == 1).sum()
+        black_total = (board == -1).sum()
+        if player == 1:
+            val = white_total / black_total
+        elif player == -1:
+            val = black_total / white_total
+        return val
+
 
 if __name__ == "__main__":
     pass
